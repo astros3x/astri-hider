@@ -35,6 +35,7 @@ msg = f.read().decode('utf-8')
 ```
 * Encrypted MSG: Write an encrypted message using the .key in a .jpg file.
 * Read encrypted: Read a secret message inside a .jpg using the .key file used to encrypt it.
+* Encryption key: Change the .key to encrypt yur message as you want.
 * Clear: Clear a .jpg from any text/useless bytes.
 ```
 with open("file.jpeg", "rb+") as f:
