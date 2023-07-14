@@ -1,10 +1,10 @@
+from tabnanny import check
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.fernet import Fernet
 from tkinter import messagebox
 import customtkinter as ctk
-from tabnanny import check
 from PIL import Image
 import customtkinter
 from random import *
@@ -50,7 +50,7 @@ def asset_downloader():
         os.system(f"mkdir {assetsfolder} > NUL 2>&1")
 
     for x in files:
-        r = requests.get(f"https://raw.githubusercontent.com/astros3x/astri-hider/main/assets/{x}.png")
+        r = requests.get(f"https://raw.githubusercontent.com/astros3x/astri-hider/main/bin/assets/{x}.png")
         open(f"{assetsfolder}\\{x}.png","wb").write(r.content)
     
     print("Download Done !")
@@ -81,7 +81,7 @@ def opendiscord():
 
 
 def opengithub():
-    webbrowser.open('https://github.com/astros3x/astri-hider')
+    webbrowser.open('https://github.com/astros3x')
 
 
 def credits():
