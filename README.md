@@ -9,7 +9,7 @@
 </div>
 
 ## 📍 About
-Astri@Hider is a tool written in python that allows you to hide secret text messages in a JPG file without actually change the image. It has a clean and flat [GUI](https://github.com/TomSchimansky/CustomTkinter) that make it intuitive and easy to use. ![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg) ![version](https://img.shields.io/badge/python-3.9-green)
+Astri@Hider is a tool written in python that allows you to hide secret text messages in a JPG file without actually changing the image. It has a clean and flat [GUI](https://github.com/TomSchimansky/CustomTkinter) that make it intuitive and easy to use. ![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg) ![version](https://img.shields.io/badge/python-3.9-green)
 <div align="center">
 
 <img src="https://github.com/astros3x/astri-hider/assets/87500882/66993e6f-9640-4ede-b05f-2b36492f5f20">
@@ -19,7 +19,7 @@ Astri@Hider is a tool written in python that allows you to hide secret text mess
 
 
 ## 🗒️ Features
-* Hide a message: Hide a message in a .jpg file without actually change the image.
+* Hide a message: Hide a message in a .jpg file without actually changing the image.
 ```
 message = str(("message")).encode()
 f = open("file.jpeg","ab")
