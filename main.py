@@ -103,6 +103,7 @@ class App(customtkinter.CTk):
         mini.bind('<ButtonRelease-1>', mini.stop)
 
 
+
         
         #MAIN WINDOW
         mini.bar = customtkinter.CTkFrame(mini, 
@@ -1152,6 +1153,7 @@ if __name__ == "__main__":
     qm_logo = customtkinter.CTkImage(Image.open(assetsfolder + "qm_logo.png"), size=(12, 16))
     back = customtkinter.CTkImage(Image.open(assetsfolder + "back.png"), size=(23, 19))
 
+    customtkinter.set_appearance_mode("dark")
 
     app = App()
     app.mainloop()
