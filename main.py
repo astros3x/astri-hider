@@ -1,16 +1,15 @@
-from tabnanny import check
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
 from cryptography.fernet import Fernet
 from tkinter import messagebox
 import customtkinter as ctk
 from PIL import Image
 import customtkinter
 from random import *
+import string
+import base64
 import webbrowser
 import requests
-import base64
+import json
+import secrets,random
 import sys
 import os
 
@@ -50,8 +49,9 @@ def asset_downloader():
         os.system(f"mkdir {assetsfolder} > NUL 2>&1")
 
     for x in files:
-        r = requests.get(f"https://raw.githubusercontent.com/astros3x/astri-hider/main/bin/assets/{x}.png")
-        open(f"{assetsfolder}\\{x}.png","wb").write(r.content)
+        x = x.replace("\\","/")
+        r = requests.get(f"https://raw.githubusercontent.com/astros3x/astri-hider/main/{x}")
+        open(x,"wb").write(r.content)
     
     print("Download Done !")
 
@@ -64,7 +64,7 @@ def folders_checker():
 def assetschecker():
     try:
         for x in files:
-            open(f"{assetsfolder}\\{x}.png")
+            open(x)
             
         return True
     
@@ -101,7 +101,6 @@ class App(customtkinter.CTk):
         mini.bind('<ButtonPress-1>', mini.drag)
         mini.bind('<B1-Motion>', mini.move)
         mini.bind('<ButtonRelease-1>', mini.stop)
-
 
 
         
@@ -559,49 +558,148 @@ class App(customtkinter.CTk):
 
 
         def key_gen():
+            def db_mixer():
+                db = dict(json.loads(open(db_base_path,"r").read()))
 
+                body = '{'
+
+
+                keys = []
+
+                for k in db:
+                    keys.append(db[k])
+
+                for x in range(len(db) +1):
+                    if x != 0:
+                        delimiter = ""
+
+                        choice = secrets.choice(keys)
+                        keys.remove(choice)
+
+                        if choice == "":
+                            choice = " "
+                        
+                        elif x != len(db):
+                            delimiter = ","
+
+                        body += f'"{x}" : "{choice}"{delimiter}\n'
+
+
+                body += '}'
+
+                open(db_path,"w").write(body)
+
+            def keygen():
+                numbers = string.digits
+
+                def gen_number():
+                    while True:
+
+                        x = ""
+
+                        for _ in range(3):
+                            x+= secrets.choice(numbers)
+
+                        x = int(x)
+
+                        if(isPrime(x)):
+                            return x
+
+
+                def isPrime(n, k=5):
+                    if n <= 1:
+                        return False
+                    if n <= 3:
+                        return True
+
+                    r, s = 0, n - 1
+                    while s % 2 == 0:
+                        r += 1
+                        s //= 2
+
+                    for _ in range(k):
+                        a = random.randint(2, n - 1)
+                        x = pow(a, s, n)
+                        if x == 1 or x == n - 1:
+                            continue
+                        for _ in range(r - 1):
+                            x = pow(x, 2, n)
+                            if x == n - 1:
+                                break
+                        else:
+                            return False
+
+                    return True
+
+
+
+
+                def mcd(a,b):
+                    while b:
+                        a, b = b, a % b
+                    return a
+
+                        
+                p = gen_number()
+                q = gen_number()
+                sm = ""
+
+                for _ in range(3):
+                    sm+= secrets.choice(numbers)
+
+                sm = int(sm)
+
+
+                n = p * q
+
+                z = (p-1) * (q-1)
+                while True:
+                    e = ""
+
+                    for _ in range(5):
+                        e+= secrets.choice(numbers)
+                    
+                    e = int(e)
+
+                    if mcd(e,z) == 1:
+                        break
+
+
+                d = pow(e,-1,z)
+
+
+                if((d*e) % z == 1):
+
+                    PUBLIC_KEY = f"KKK_{e}_{n}_{sm}_KKK"
+
+                    PRIVATE_KEY = f"KKK_{d}_{n}_{sm}_KKK"
+
+
+
+                    to_write = f"{PUBLIC_KEY}\n{PRIVATE_KEY}"
+
+                    open(key_path,"w").write(to_write)
+                        
+                    
+                else:
+                    print("\nGenerate Again !")
+                            
             def gen():
-                try:
-                    get_password = input_password.get()
-                    password = str(get_password).encode()
-                    pass
+                    keygen()
+                    db_mixer()
 
-                except Exception as e:
-                    messagebox.showerror('Error', f'{e}')
-
-                
-                #SCRIPT TO ENCRYPT THE PASSWORD TO CREATE A PERSONAL KEY FILE
-                try:
-                    chars = b'\x7f\xc2\xb8\x98\x04D\x82\xf3\xa2\xf4\x7f\xb0j\x80\x01\x8e'
-
-                    kdf = PBKDF2HMAC(
-                        algorithm = hashes.SHA256(),
-                        length=32,
-                        salt=chars,
-                        iterations=100000,
-                        backend=default_backend()
-                    )
-
-                    key = base64.urlsafe_b64encode(kdf.derive(password))
-
-                    open(key_path,"wb").write(key)
-
-                    messagebox.showinfo("DONE !",f"New Secret Passphrase set SUCCESSFULLY !")
+                    messagebox.showinfo("DONE !",f"New Keys Pair and JSON SCHEME set SUCCESSFULLY !")
 
                     val = checkbox.get() #if checkbox is flagged open the results folder
                     if val == 1:
                         os.startfile(encryptionfolder)
-                    
-
-                except Exception as e:
-                    messagebox.showerror('Error', f'{e}')
 
             for widget in mini.main.winfo_children():
                 widget.destroy()
 
 
             ktitle = customtkinter.CTkLabel(mini.main, 
-                                                text = 'ENCRYPTION KEY GENERATOR', 
+                                                text = 'KEYS PAIR & JSON SCHEME GENERATOR', 
                                                 font=tfont)
             
             ktitle.place(relx = 0.25, rely = 0.06)
@@ -617,14 +715,6 @@ class App(customtkinter.CTk):
                                 command = excryption)
 
             qm_button.place(relx = 0.9, rely = 0.05)
-
-
-            input_password = customtkinter.CTkEntry(mini.main, 
-                                                    placeholder_text='Your password',
-                                                    width=170)
-            
-            input_password.place(relx = 0.30, rely = 0.42)
-
 
             checkbox = customtkinter.CTkCheckBox(mini.main,
                                                     onvalue=1, 
@@ -672,6 +762,36 @@ class App(customtkinter.CTk):
 
 
         def encryptedwriter():
+            def cb_rsa_encrypt(k,m):
+                key_split = k.split("_")
+
+                e = int(key_split[1])
+                n = int(key_split[2])
+                sm = int(key_split[3])
+
+
+                db = dict(json.loads(open(db_path,"r").read()))
+
+                reverse_db = dict(zip(db.values(),db.keys()))
+
+                encrypted_msg = "$$$_"
+
+                for char in m:
+
+                    try:
+                        enc = int(reverse_db[char])
+
+                    except Exception as ex:
+                        enc = int(reverse_db["$_$_$_$_$"])
+
+                    c = int(pow((enc*sm),e) % n)
+
+                    encrypted_msg+= f"{c}_"
+
+                encrypted_msg+= "$$$"
+
+                return base64.b64encode(encrypted_msg.encode())
+
             def encwriter():
                 try:
                     get_path = input_path.get()
@@ -684,17 +804,8 @@ class App(customtkinter.CTk):
                     if(file_present(get_path)):
 
                         if(check_ext(get_path)):
-                    
-                            msg = input_text.get().encode()
 
                             filename = get_filename(get_path)
-
-                            #SCRIPT TO ENCRYPT THE MESSAGE WITH THE .key FILE
-                            key = open(key_path,"rb").read()
-
-                            fernet = Fernet(key)
-                            data = fernet.encrypt(msg)
-
 
                             os.system(f"copy {path} {res_encrypted} > NUL 2>&1")
 
@@ -703,7 +814,7 @@ class App(customtkinter.CTk):
                             function_clear(PATH)
 
                             f = open(PATH, "ab")
-                            f.write(data)
+                            f.write(cb_rsa_encrypt(open(key_path,"r").read().split("\n")[0],input_text.get()))
 
                             messagebox.showinfo("DONE !",f"Encrypted Message successfully hide => `{filename}` ")
 
@@ -719,9 +830,8 @@ class App(customtkinter.CTk):
                         messagebox.showerror("ERROR", f"`{path}`found !")
 
                 except Exception as e:
-
                     if "No such file" in str(e):
-                        messagebox.showinfo("Create a KEY","You need to create an encryption key !")
+                        messagebox.showinfo("Create a KEYS PAIR","You need to GENERATE a Keys Pair and a JSON SCHEME !")
                         key_gen()
                     else:
                         messagebox.showerror('Error', f'{e}')
@@ -806,6 +916,26 @@ class App(customtkinter.CTk):
 
 
         def encmsgreader():
+            def cb_rsa_decrypt(k,m):
+                key_split = k.split("_")
+                d = int(key_split[1])
+                n = int(key_split[2])
+                sm = int(key_split[3])
+
+                db = dict(json.loads(open(db_path,"r").read()))
+
+                m = base64.b64decode(m).decode().split("_")
+
+                message = ""
+
+                for val in m:
+                    if val != "$$$":
+
+                        c = round((int(val)**d % n) / sm)
+                        
+                        message+= db[str(c)]
+
+                return message
 
             def reader():
                 try:
@@ -825,26 +955,27 @@ class App(customtkinter.CTk):
 
                         original_msg = f.read().decode('utf-8')
 
-                        key = open(key_path,"rb").read()
-
-                        fernet = Fernet(key)
-                        data = fernet.decrypt(original_msg).decode()
-                        
                         #insert the result in the textbox
-                        result.insert('1.0', data)
+                        result.insert('1.0', cb_rsa_decrypt(open(key_path,"r").read().split("\n")[1],original_msg))
                         
                     else:
                         messagebox.showerror("ERROR", f"`{getpath}`found !")
 
                 except Exception as e:
                     if "No such file" in str(e):
-                        messagebox.showerror("ERROR", f"`{getpath}` NOT found !")
+                        print(db_path)
 
-                    elif str(e) == "":
-                        messagebox.showerror("Error","Invalid Password or Encrypted Message missing")
+                        if "db.json" in str(e):
+                            messagebox.showerror("SCHEME MISSING", f"GENERATE A JSON SCHEME !")
+                        
+                        else:
+                            messagebox.showerror("ERROR", f"`{getpath}` NOT found !")
+
+                        print(e)
 
                     else:
-                        messagebox.showerror('Error', f'{e}')
+                        messagebox.showerror('Error', f'Private Key NOT CORRECT !')
+
 
 
             for widget in mini.main.winfo_children():
@@ -1080,6 +1211,9 @@ if __name__ == "__main__":
 
     key_path = "bin\\encryption\\key.key"
 
+    db_base_path = "bin\\encryption\\db_BASE.json"
+    db_path = "bin\\encryption\\db.json"
+
     folders = [binfolder, 
             resfolder, 
             res_encrypted, 
@@ -1088,12 +1222,13 @@ if __name__ == "__main__":
             assetsfolder,
             encryptionfolder]
 
-    files = ["back",
-             "ds_logo",
-             "folder_ico",
-             "gh_logo",
-             "info_logo",
-             "qm_logo"
+    files = [f"{assetsfolder}back.png",
+             f"{assetsfolder}ds_logo.png",
+             f"{assetsfolder}folder_ico.png",
+             f"{assetsfolder}gh_logo.png",
+             f"{assetsfolder}info_logo.png",
+             f"{assetsfolder}qm_logo.png",
+             f"{encryptionfolder}db_BASE.json"
              ]
 
 
@@ -1153,7 +1288,6 @@ if __name__ == "__main__":
     qm_logo = customtkinter.CTkImage(Image.open(assetsfolder + "qm_logo.png"), size=(12, 16))
     back = customtkinter.CTkImage(Image.open(assetsfolder + "back.png"), size=(23, 19))
 
-    customtkinter.set_appearance_mode("dark")
 
     app = App()
     app.mainloop()
