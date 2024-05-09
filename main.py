@@ -7,6 +7,7 @@ from random import *
 import string
 import base64
 import webbrowser
+import shutil
 import requests
 import json
 import secrets,random
@@ -209,7 +210,7 @@ class App(customtkinter.CTk):
                             #SCRIPT TO ADD THE MESSAGE TO THE JPG
                             filename = get_filename(getpath)
 
-                            os.system(f"copy {getpath} {res_default} > NUL 2>&1")
+                            shutil.copy(getpath,res_default)
 
                             PATH = f"{res_default}\\{filename}"
 
@@ -453,8 +454,7 @@ class App(customtkinter.CTk):
                             #SCRIPT TO CLEAR THE HIDDEN CONTENT FROM THE JPG
 
                             filename = get_filename(getpath)
-
-                            os.system(f"copy {getpath} {res_cleared} > NUL 2>&1")
+                            shutil.copy(getpath,res_cleared)
 
                             with open(f"{res_cleared}\\{filename}", "rb+") as f:
 
@@ -803,9 +803,9 @@ class App(customtkinter.CTk):
 
                             filename = get_filename(get_path)
 
-                            os.system(f"copy {path} {res_encrypted} > NUL 2>&1")
-
                             PATH = f"{res_encrypted}\\{filename}"
+
+                            shutil.copy(get_path,res_encrypted)
 
                             function_clear(PATH)
 
@@ -826,6 +826,7 @@ class App(customtkinter.CTk):
                         messagebox.showerror("ERROR", f"`{path}`found !")
 
                 except Exception as e:
+                    print(e)
                     if "No such file" in str(e):
                         messagebox.showinfo("Create a KEYS PAIR","You need to GENERATE a Keys Pair and a JSON SCHEME !")
                         key_gen()
