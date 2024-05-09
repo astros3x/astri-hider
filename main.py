@@ -777,7 +777,7 @@ class App(customtkinter.CTk):
                     try:
                         enc = int(reverse_db[char])
 
-                    except Exception as ex:
+                    except: #KeyError
                         enc = int(reverse_db["$_$_$_$_$"])
 
                     c = int(pow((enc*sm),e) % n)
