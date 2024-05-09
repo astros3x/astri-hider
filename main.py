@@ -679,10 +679,6 @@ class App(customtkinter.CTk):
                     to_write = f"{PUBLIC_KEY}\n{PRIVATE_KEY}"
 
                     open(key_path,"w").write(to_write)
-                        
-                    
-                else:
-                    print("\nGenerate Again !")
                             
             def gen():
                     keygen()
@@ -963,15 +959,12 @@ class App(customtkinter.CTk):
 
                 except Exception as e:
                     if "No such file" in str(e):
-                        print(db_path)
 
                         if "db.json" in str(e):
                             messagebox.showerror("SCHEME MISSING", f"GENERATE A JSON SCHEME !")
                         
                         else:
                             messagebox.showerror("ERROR", f"`{getpath}` NOT found !")
-
-                        print(e)
 
                     else:
                         messagebox.showerror('Error', f'Private Key NOT CORRECT !')
