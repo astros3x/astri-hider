@@ -1,0 +1,5 @@
+cryptography==42.0.8
+customtkinter==5.2.2
+Pillow==9.5.0
+requests==2.31.0
+pywinstyles

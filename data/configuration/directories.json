@@ -1,0 +1,6 @@
+{
+    "defaultPath" : "data\\results\\default\\",
+    "convertedPath" : "data\\results\\converted\\",
+    "cleanPath" : "data\\results\\clean\\",
+    "keys" : "data\\modules\\encryption\\keys\\"
+}
