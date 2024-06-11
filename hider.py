@@ -264,7 +264,7 @@ class App(customtkinter.CTk):
         CreditsButton = customtkinter.CTkButton(ToolsBarFrame, width = 40, height = 23, fg_color  = grey4, hover_color=  black2, text = 'Credits', corner_radius=0, command = dropdown_credits_frame)
         CreditsButton.place(relx = 0.33)
         
-        VersionLabel = customtkinter.CTkLabel(ToolsBarFrame, width = 40, height = 23, fg_color = grey4, text = f'v{hiderVersion}')
+        VersionLabel = customtkinter.CTkLabel(ToolsBarFrame, width = 40, height = 23, fg_color = grey4, text = f'v{version}')
         VersionLabel.place(relx = 0.93)
         
         MenuButtons = []
@@ -439,8 +439,8 @@ class App(customtkinter.CTk):
     
     
     def close(self):
-        #if messagebox.askokcancel('Exit', 'Are you sure to close Astri@Hider?'):
-        #    sys.exit()
+        if messagebox.askokcancel('Exit', 'Are you sure to close Astri@Hider?'):
+            sys.exit()
         sys.exit()
          
          
