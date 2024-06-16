@@ -1,3 +1,5 @@
 {
-    "onTop": 1
+    "onTop": 1,
+    "transparency": 1,
+    "transparencyValue": 0.3
 }

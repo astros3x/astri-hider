@@ -2,7 +2,7 @@ discord_invite = 'https://discord.com/invite/v3ywWGPZQS'
 
 github = ['https://github.com/astros3x', 'https://github.com/captainbeluga']
 
-credits_note = ['Credits', 'This program was made by:\n- @astros3x\n- @CaptainBeluga\n\nCheck our Githubs.\nJoin discord for support.']
+credits_note = ['Credits', 'This program was made by:\n- @astros3x\n- @CaptainBeluga\n\nJoin discord for support.']
 
 hider_info = ['Message Hider Info', 'This option allows you to hide a secret text message in a JPG file without actually changing the look of the image.']
 

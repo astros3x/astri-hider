@@ -5,37 +5,33 @@ import shutil
 import os
 
 def converter():
-    file_path = filedialog.askopenfilename(title = 'Astri@Hider | Convert image', filetypes = [('File PNG', '.png'), ('File WEBP', '.webp'), ('File BMP', '.bmp'),
+    filePath = filedialog.askopenfilename(title = 'Astri@Hider | Convert image', filetypes = [('File PNG', '.png'), ('File WEBP', '.webp'), ('File BMP', '.bmp'),
                                                                                               ('File TIFF', '.tiff'), ('File GIF',  '.gif')])
-    file_name = os.path.splitext(os.path.basename(file_path))[0]
+    fileName = os.path.splitext(os.path.basename(filePath))[0]
     
     try:
-        with Image.open(file_path) as img:
-            img.convert('RGB').save(f'data\\results\\converted\\{file_name}.jpg', 'JPEG')
+        with Image.open(filePath) as img:
+            img.convert('RGB').save(f'data\\results\\converted\\{fileName}.jpg', 'JPEG')
             
     except Exception as e:
         call_errorbox('Astri@Hider | Converter', f'Error : {e}')
         
     
 def function_clear(path):
-    with open(path, "rb+") as f:
+    with open(path, 'rb+') as f:
         content = f.read()
-        off = content.index(bytes.fromhex("FFD9"))
+        off = content.index(bytes.fromhex('FFD9'))
         if off != -1:
             f.seek(off + 2)
             f.truncate()
 
 
 def check_ext(path):
-    if path.endswith('.jpg'):
-        return True
-    
-    else:
-        return False
+    return True if path.endswith('.jpg') else False
 
 
 def get_filename(path):
-    available = ["\\","/"]
+    available = ['\\', '/']
 
     for z in available:
         if z in path:
@@ -44,8 +40,9 @@ def get_filename(path):
 
 def file_present(path):
     try:
-        open(path,"r")
+        open(path, 'r')
         return True
+    
     except FileNotFoundError:
         return False
 
@@ -64,10 +61,10 @@ def writer(filePath, msg, keysPath, encryption, outputPath):
 
                 function_clear(path)
 
-                f = open(path, "ab")
+                f = open(path, 'ab')
                 
                 if encryption != 'None':
-                    f.write(cb_rsa_encrypt(open(f'{keysPath}{encryption}.txt',"r").read().split("\n")[0], msg))
+                    f.write(cb_rsa_encrypt(open(f'{keysPath}{encryption}.txt','r').read().split('\n')[0], msg))
                 else:
                     f.write(msg.encode())
 
@@ -91,7 +88,7 @@ def reader(filePath, keysPath, encryption):
 
             #SCRIPT TO EXTRACT THE MESSAGE FROM THE JPG
 
-            f = open(filePath,"rb")
+            f = open(filePath,'rb')
 
             content = f.read()
             off = content.index(bytes.fromhex('FFD9'))
@@ -105,7 +102,7 @@ def reader(filePath, keysPath, encryption):
 
 
             if encryption != 'None':
-                return cb_rsa_decrypt(open(f'{keysPath}{encryption}.txt',"r").read().split("\n")[1], msg)
+                return cb_rsa_decrypt(open(f'{keysPath}{encryption}.txt','r').read().split('\n')[1], msg)
             else:
                 return msg
 
@@ -113,10 +110,10 @@ def reader(filePath, keysPath, encryption):
             messagebox.showerror('ERROR', 'Your Image is NOT a JPG !')
             
     except Exception as e:
-        if "No such file" in str(e):
+        if 'No such file' in str(e):
 
-            if "db.json" in str(e):
-                messagebox.showerror("SCHEME MISSING", f"GENERATE A JSON SCHEME !")
+            if 'db.json' in str(e):
+                messagebox.showerror('SCHEME MISSING', f'GENERATE A JSON SCHEME !')
             
             else:
                 messagebox.showerror("ERROR", f"`{filePath}` NOT found !")
@@ -135,10 +132,10 @@ def cleaner(filePath, outputPath):
                     filename = get_filename(filePath)
                     shutil.copy(filePath, outputPath)
 
-                    with open(f"{outputPath}\\{filename}", "rb+") as f:
+                    with open(f'{outputPath}\\{filename}', 'rb+') as f:
 
                         content = f.read()
-                        off = content.index(bytes.fromhex("FFD9")) #this function delet only the content at the end of the hex code
+                        off = content.index(bytes.fromhex('FFD9')) #this function delet only the content at the end of the hex code
 
                         if off != -1:
                             f.seek(off + 2)

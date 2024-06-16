@@ -1,3 +1,5 @@
+''' Custom ncryption system by @CaptainBeluga https://github.com/CaptainBeluga/cb_rsa '''
+
 from tkinter import messagebox
 import base64
 import json
